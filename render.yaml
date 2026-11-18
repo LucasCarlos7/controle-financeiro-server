@@ -1,0 +1,23 @@
+services:
+  - type: web
+    name: controle-financeiro-api
+    runtime: docker
+    repo: https://github.com/LucasCarlos7/controle-financeiro-server
+    branch: main
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /health
+    envVars:
+      - key: ASPNETCORE_ENVIRONMENT
+        value: Production
+      - key: Jwt__Secret
+        sync: false  # definido manualmente no painel (secret)
+      - key: Jwt__Issuer
+        value: ControleFinanceiro.Api
+      - key: Jwt__Audience
+        value: ControleFinanceiro.Client
+      - key: Jwt__ExpirationMinutes
+        value: "60"
+      - key: ConnectionStrings__DefaultConnection
+        sync: false  # definido manualmente no painel (secret)
+      - key: Cors__AllowedOrigins__0
+        sync: false  # URL do frontend — definir no painel
