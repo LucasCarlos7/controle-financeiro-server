@@ -14,23 +14,53 @@ public sealed class GetResumoMensalQueryHandler(IApplicationDbContext dbContext)
     {
         var transacoes = await dbContext.Transacoes.AsNoTracking()
             .Where(t => t.UserId == request.UserId
-                && t.Status == StatusTransacao.Pago
+                && !t.Status.Equals(StatusTransacao.Cancelado)
                 && t.Data.Year == request.Ano
                 && t.Data.Month == request.Mes
                 && (t.Tipo == TipoTransacao.Receita || t.Tipo == TipoTransacao.Despesa))
-            .Select(t => new { t.Tipo, t.Valor })
+            .Select(t => new { t.Tipo, t.Valor, t.Status })
             .ToListAsync(cancellationToken);
 
-        var receitas = transacoes.Where(t => t.Tipo == TipoTransacao.Receita).Sum(t => t.Valor);
-        var despesas = transacoes.Where(t => t.Tipo == TipoTransacao.Despesa).Sum(t => t.Valor);
+        decimal receitasRecebidas = 0m, despesasPagas = 0m;
+        decimal receitasPendentes = 0m, despesasPendentes = 0m;
+        int qtdReceitasPendentes = 0, qtdDespesasPendentes = 0;
+
+        foreach (var t in transacoes)
+        {
+            var realizado = t.Status == StatusTransacao.Pago || t.Status == StatusTransacao.Recebido;
+            var pendente = t.Status == StatusTransacao.Pendente;
+
+            if (t.Tipo == TipoTransacao.Receita)
+            {
+                if (realizado) receitasRecebidas += t.Valor;
+                else if (pendente) { receitasPendentes += t.Valor; qtdReceitasPendentes++; }
+            }
+            else
+            {
+                if (realizado) despesasPagas += t.Valor;
+                else if (pendente) { despesasPendentes += t.Valor; qtdDespesasPendentes++; }
+            }
+        }
+
+        var saldoRealizado = receitasRecebidas - despesasPagas;
+        var receitasPrevistas = receitasRecebidas + receitasPendentes;
+        var despesasPrevistas = despesasPagas + despesasPendentes;
+        var saldoPrevisto = receitasPrevistas - despesasPrevistas;
 
         return Result.Success(new ResumoMensalResponse
         {
             Ano = request.Ano,
             Mes = request.Mes,
-            Receitas = receitas,
-            Despesas = despesas,
-            Saldo = receitas - despesas,
+            ReceitasRecebidas = receitasRecebidas,
+            DespesasPagas = despesasPagas,
+            SaldoRealizado = saldoRealizado,
+            ReceitasPendentes = receitasPendentes,
+            DespesasPendentes = despesasPendentes,
+            ReceitasPrevistas = receitasPrevistas,
+            DespesasPrevistas = despesasPrevistas,
+            SaldoPrevisto = saldoPrevisto,
+            QtdReceitasPendentes = qtdReceitasPendentes,
+            QtdDespesasPendentes = qtdDespesasPendentes,
         });
     }
 }
