@@ -9,6 +9,7 @@ public sealed record CategoriaResponse
     public required TipoCategoria Tipo { get; init; }
     public string? Icone { get; init; }
     public string? Cor { get; init; }
+    public required bool IsPadrao { get; init; }
     public required IReadOnlyList<SubcategoriaResponse> Subcategorias { get; init; }
 }
 

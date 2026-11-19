@@ -5,4 +5,5 @@ public sealed record TagResponse
     public required Guid Id { get; init; }
     public required string Nome { get; init; }
     public string? Icone { get; init; }
+    public required bool IsPadrao { get; init; }
 }

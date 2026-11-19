@@ -12,4 +12,7 @@ public static class TagErrors
 
     public static readonly Error JaExiste =
         new("Tag.JaExiste", "Você já tem uma tag com este nome.");
+
+    public static readonly Error ExclusaoDeTagPadrao =
+        new("Tag.ExclusaoDeTagPadrao", "Tags padrão do sistema não podem ser excluídas.");
 }

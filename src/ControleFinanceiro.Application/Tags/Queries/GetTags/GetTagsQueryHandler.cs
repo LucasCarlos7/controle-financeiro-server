@@ -13,7 +13,7 @@ public sealed class GetTagsQueryHandler(IApplicationDbContext dbContext)
     {
         IReadOnlyList<TagResponse> tags = await dbContext.Tags.AsNoTracking()
             .Where(t => t.UserId == request.UserId)
-            .Select(t => new TagResponse { Id = t.Id, Nome = t.Nome, Icone = t.Icone })
+            .Select(t => new TagResponse { Id = t.Id, Nome = t.Nome, Icone = t.Icone, IsPadrao = t.IsPadrao })
             .ToListAsync(cancellationToken);
 
         return Result.Success(tags);

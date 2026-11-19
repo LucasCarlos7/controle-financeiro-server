@@ -9,11 +9,12 @@ public sealed class Categoria : Entity
     public TipoCategoria Tipo { get; private set; }
     public string? Icone { get; private set; }
     public string? Cor { get; private set; }
+    public bool IsPadrao { get; private set; }
 
     private readonly List<Subcategoria> _subcategorias = [];
     public IReadOnlyList<Subcategoria> Subcategorias => _subcategorias.AsReadOnly();
 
-    private Categoria(Guid id, Guid userId, string nome, TipoCategoria tipo, string? icone, string? cor)
+    private Categoria(Guid id, Guid userId, string nome, TipoCategoria tipo, string? icone, string? cor, bool isPadrao)
         : base(id)
     {
         UserId = userId;
@@ -21,14 +22,15 @@ public sealed class Categoria : Entity
         Tipo = tipo;
         Icone = icone;
         Cor = cor;
+        IsPadrao = isPadrao;
     }
 
-    public static Result<Categoria> Create(Guid userId, string nome, TipoCategoria tipo, string? icone, string? cor)
+    public static Result<Categoria> Create(Guid userId, string nome, TipoCategoria tipo, string? icone, string? cor, bool isPadrao = false)
     {
         if (string.IsNullOrWhiteSpace(nome))
             return Result.Failure<Categoria>(CategoriaErrors.NomeObrigatorio);
 
-        return Result.Success(new Categoria(Guid.NewGuid(), userId, nome.Trim(), tipo, icone, cor));
+        return Result.Success(new Categoria(Guid.NewGuid(), userId, nome.Trim(), tipo, icone, cor, isPadrao));
     }
 
     public Result AtualizarDetalhes(string nome, string? icone, string? cor)

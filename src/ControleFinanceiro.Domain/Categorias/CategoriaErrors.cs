@@ -18,4 +18,7 @@ public static class CategoriaErrors
 
     public static readonly Error SubcategoriaNaoPertenceACategoria =
         new("Categoria.SubcategoriaNaoPertenceACategoria", "A subcategoria informada não pertence à categoria informada.");
+
+    public static readonly Error ExclusaoDeCategoriaPadrao =
+        new("Categoria.ExclusaoDeCategoriaPadrao", "Categorias padrão do sistema não podem ser excluídas.");
 }

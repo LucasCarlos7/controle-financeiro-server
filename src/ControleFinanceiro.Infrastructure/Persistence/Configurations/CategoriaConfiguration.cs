@@ -36,6 +36,11 @@ internal sealed class CategoriaConfiguration : IEntityTypeConfiguration<Categori
             .HasColumnName("cor")
             .HasMaxLength(20);
 
+        builder.Property(c => c.IsPadrao)
+            .HasColumnName("is_padrao")
+            .HasDefaultValue(false)
+            .IsRequired();
+
         builder.HasMany(c => c.Subcategorias)
             .WithOne()
             .HasForeignKey(s => s.CategoriaId)

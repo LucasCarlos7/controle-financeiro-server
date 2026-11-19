@@ -40,6 +40,12 @@ namespace ControleFinanceiro.Infrastructure.Persistence.Migrations
                         .HasColumnType("character varying(50)")
                         .HasColumnName("icone");
 
+                    b.Property<bool>("IsPadrao")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(false)
+                        .HasColumnName("is_padrao");
+
                     b.Property<string>("Nome")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -295,6 +301,12 @@ namespace ControleFinanceiro.Infrastructure.Persistence.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)")
                         .HasColumnName("icone");
+
+                    b.Property<bool>("IsPadrao")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(false)
+                        .HasColumnName("is_padrao");
 
                     b.Property<string>("Nome")
                         .IsRequired()

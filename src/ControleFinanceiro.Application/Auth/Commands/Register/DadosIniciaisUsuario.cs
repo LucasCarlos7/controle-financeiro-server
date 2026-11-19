@@ -52,7 +52,7 @@ public static class DadosIniciaisUsuario
     public static IReadOnlyList<Categoria> CriarCategorias(Guid userId) =>
         CategoriasPadrao.Select(padrao =>
         {
-            var categoria = Garantir(Categoria.Create(userId, padrao.Nome, padrao.Tipo, padrao.Icone, padrao.Cor));
+            var categoria = Garantir(Categoria.Create(userId, padrao.Nome, padrao.Tipo, padrao.Icone, padrao.Cor, isPadrao: true));
             foreach (var subcategoria in padrao.Subcategorias)
                 Garantir(categoria.AdicionarSubcategoria(subcategoria));
 
@@ -60,7 +60,7 @@ public static class DadosIniciaisUsuario
         }).ToList();
 
     public static IReadOnlyList<Tag> CriarTags(Guid userId) =>
-        TagsPadrao.Select(padrao => Garantir(Tag.Create(userId, padrao.Nome, padrao.Icone))).ToList();
+        TagsPadrao.Select(padrao => Garantir(Tag.Create(userId, padrao.Nome, padrao.Icone, isPadrao: true))).ToList();
 
     // Os dados acima são constantes: uma falha aqui é bug na lista, não erro de entrada do usuário.
     private static T Garantir<T>(Result<T> result) => result.IsSuccess

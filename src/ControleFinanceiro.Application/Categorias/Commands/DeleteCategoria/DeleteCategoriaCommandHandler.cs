@@ -14,6 +14,9 @@ public sealed class DeleteCategoriaCommandHandler(IApplicationDbContext dbContex
         if (categoria is null || categoria.UserId != request.UserId)
             return Result.Failure(CategoriaErrors.NaoEncontrada);
 
+        if (categoria.IsPadrao)
+            return Result.Failure(CategoriaErrors.ExclusaoDeCategoriaPadrao);
+
         dbContext.Categorias.Remove(categoria);
         await dbContext.SaveChangesAsync(cancellationToken);
 

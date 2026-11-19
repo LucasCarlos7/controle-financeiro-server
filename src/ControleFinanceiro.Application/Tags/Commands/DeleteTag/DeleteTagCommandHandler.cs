@@ -14,6 +14,9 @@ public sealed class DeleteTagCommandHandler(IApplicationDbContext dbContext)
         if (tag is null || tag.UserId != request.UserId)
             return Result.Failure(TagErrors.NaoEncontrada);
 
+        if (tag.IsPadrao)
+            return Result.Failure(TagErrors.ExclusaoDeTagPadrao);
+
         dbContext.Tags.Remove(tag);
         await dbContext.SaveChangesAsync(cancellationToken);
 

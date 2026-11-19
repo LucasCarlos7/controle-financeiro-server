@@ -26,6 +26,11 @@ internal sealed class TagConfiguration : IEntityTypeConfiguration<Tag>
             .HasColumnName("icone")
             .HasMaxLength(50);
 
+        builder.Property(t => t.IsPadrao)
+            .HasColumnName("is_padrao")
+            .HasDefaultValue(false)
+            .IsRequired();
+
         builder.HasIndex(t => new { t.UserId, t.Nome }).IsUnique();
     }
 }

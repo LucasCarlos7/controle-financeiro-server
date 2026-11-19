@@ -11,6 +11,7 @@ internal static class CategoriaMapper
         Tipo = categoria.Tipo,
         Icone = categoria.Icone,
         Cor = categoria.Cor,
+        IsPadrao = categoria.IsPadrao,
         Subcategorias = categoria.Subcategorias
             .Select(s => new SubcategoriaResponse { Id = s.Id, Nome = s.Nome })
             .ToList(),
