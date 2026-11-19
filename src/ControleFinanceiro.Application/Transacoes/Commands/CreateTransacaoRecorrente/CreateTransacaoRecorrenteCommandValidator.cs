@@ -22,8 +22,8 @@ public sealed class CreateTransacaoRecorrenteCommandValidator : AbstractValidato
             .InclusiveBetween(1, 120)
             .When(x => x.TipoRecorrencia == TipoRecorrencia.Parcelada);
 
-        RuleFor(x => x.DataFim)
-            .GreaterThanOrEqualTo(x => x.DataInicio)
-            .When(x => x.DataFim is not null);
+        RuleFor(x => x.TotalParcelas)
+            .InclusiveBetween(1, 120)
+            .When(x => x.TipoRecorrencia != TipoRecorrencia.Parcelada && x.TotalParcelas is not null);
     }
 }

@@ -32,7 +32,7 @@ public class DeleteRecorrenciaCommandHandlerTests
     [Fact]
     public async Task Handle_Should_ReturnNaoEncontrada_When_RecorrenciaPertenceAOutroUsuario()
     {
-        var recorrencia = Recorrencia.Create(Guid.NewGuid(), TipoRecorrencia.Mensal, 1, null, null, null).Value;
+        var recorrencia = Recorrencia.Create(Guid.NewGuid(), TipoRecorrencia.Mensal, 1, null, null).Value;
         _recorrenciasDbSet.FindAsync(Arg.Any<object[]>(), Arg.Any<CancellationToken>())
             .Returns(ValueTask.FromResult<Recorrencia?>(recorrencia));
 

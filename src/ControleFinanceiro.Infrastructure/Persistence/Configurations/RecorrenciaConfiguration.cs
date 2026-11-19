@@ -32,9 +32,6 @@ internal sealed class RecorrenciaConfiguration : IEntityTypeConfiguration<Recorr
         builder.Property(r => r.ParcelaAtual)
             .HasColumnName("parcela_atual");
 
-        builder.Property(r => r.DataFim)
-            .HasColumnName("data_fim");
-
         builder.Ignore(r => r.DomainEvents);
     }
 }

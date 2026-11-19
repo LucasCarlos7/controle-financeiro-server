@@ -43,16 +43,6 @@ public class CreateTransacaoRecorrenteCommandValidatorTests
     }
 
     [Fact]
-    public void Should_ReturnError_When_DataFimAnteriorADataInicio()
-    {
-        var command = ValidCommand() with { DataFim = new DateOnly(2025, 12, 1) };
-
-        var result = _validator.TestValidate(command);
-
-        result.ShouldHaveValidationErrorFor(x => x.DataFim);
-    }
-
-    [Fact]
     public void Should_NotHaveErrors_When_ComandoValido()
     {
         var command = ValidCommand() with { TipoRecorrencia = TipoRecorrencia.Parcelada, TotalParcelas = 12 };

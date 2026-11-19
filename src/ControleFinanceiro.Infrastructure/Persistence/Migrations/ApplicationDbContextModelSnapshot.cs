@@ -333,10 +333,6 @@ namespace ControleFinanceiro.Infrastructure.Persistence.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("id");
 
-                    b.Property<DateOnly?>("DataFim")
-                        .HasColumnType("date")
-                        .HasColumnName("data_fim");
-
                     b.Property<int?>("IntervaloMeses")
                         .HasColumnType("integer")
                         .HasColumnName("intervalo_meses");

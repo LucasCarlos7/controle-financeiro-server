@@ -31,7 +31,7 @@ public sealed class CreateTransacaoRecorrenteCommandHandler(IApplicationDbContex
             return Result.Failure<Guid>(referenciasValidas.Error);
 
         var recorrenciaResult = Recorrencia.Create(
-            request.UserId, request.TipoRecorrencia, request.IntervaloMeses, request.TotalParcelas, null, request.DataFim);
+            request.UserId, request.TipoRecorrencia, request.IntervaloMeses, request.TotalParcelas, null);
 
         if (recorrenciaResult.IsFailure)
             return Result.Failure<Guid>(recorrenciaResult.Error);
@@ -80,24 +80,11 @@ public sealed class CreateTransacaoRecorrenteCommandHandler(IApplicationDbContex
     private static List<DateOnly> GerarDatas(CreateTransacaoRecorrenteCommand request)
     {
         var intervalo = request.IntervaloMeses ?? 1;
-        var datas = new List<DateOnly>();
+        var total = request.TotalParcelas ?? MaxOcorrenciasIndeterminadas;
+        var datas = new List<DateOnly>(total);
 
-        if (request.TipoRecorrencia == TipoRecorrencia.Parcelada)
-        {
-            var total = request.TotalParcelas!.Value;
-            for (var i = 0; i < total; i++)
-                datas.Add(request.DataInicio.AddMonths(i * intervalo));
-
-            return datas;
-        }
-
-        // Sem data-fim, limitamos o horizonte de geração para não criar lançamentos indefinidamente.
-        var data = request.DataInicio;
-        while (datas.Count < MaxOcorrenciasIndeterminadas && (request.DataFim is null || data <= request.DataFim))
-        {
-            datas.Add(data);
-            data = data.AddMonths(intervalo);
-        }
+        for (var i = 0; i < total; i++)
+            datas.Add(request.DataInicio.AddMonths(i * intervalo));
 
         return datas;
     }

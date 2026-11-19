@@ -21,5 +21,4 @@ public sealed record CreateTransacaoRecorrenteCommand : IRequest<Result<Guid>>
     public required TipoRecorrencia TipoRecorrencia { get; init; }
     public int? IntervaloMeses { get; init; }
     public int? TotalParcelas { get; init; }
-    public DateOnly? DataFim { get; init; }
 }

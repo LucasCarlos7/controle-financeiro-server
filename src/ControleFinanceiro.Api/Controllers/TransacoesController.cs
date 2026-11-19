@@ -112,7 +112,6 @@ public sealed class TransacoesController(ISender sender, ICurrentUserService cur
             TipoRecorrencia = request.TipoRecorrencia,
             IntervaloMeses = request.IntervaloMeses,
             TotalParcelas = request.TotalParcelas,
-            DataFim = request.DataFim,
         };
 
         var result = await sender.Send(command, cancellationToken);

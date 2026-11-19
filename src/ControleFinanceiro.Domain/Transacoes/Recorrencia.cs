@@ -9,7 +9,6 @@ public sealed class Recorrencia : Entity
     public int? IntervaloMeses { get; private set; }
     public int? TotalParcelas { get; private set; }
     public int? ParcelaAtual { get; private set; }
-    public DateOnly? DataFim { get; private set; }
 
     private Recorrencia(
         Guid id,
@@ -17,8 +16,7 @@ public sealed class Recorrencia : Entity
         TipoRecorrencia tipo,
         int? intervaloMeses,
         int? totalParcelas,
-        int? parcelaAtual,
-        DateOnly? dataFim)
+        int? parcelaAtual)
         : base(id)
     {
         UserId = userId;
@@ -26,7 +24,6 @@ public sealed class Recorrencia : Entity
         IntervaloMeses = intervaloMeses;
         TotalParcelas = totalParcelas;
         ParcelaAtual = parcelaAtual;
-        DataFim = dataFim;
     }
 
     public static Result<Recorrencia> Create(
@@ -34,8 +31,7 @@ public sealed class Recorrencia : Entity
         TipoRecorrencia tipo,
         int? intervaloMeses,
         int? totalParcelas,
-        int? parcelaAtual,
-        DateOnly? dataFim)
+        int? parcelaAtual)
     {
         if (tipo == TipoRecorrencia.Parcelada && (totalParcelas is null or <= 0))
             return Result.Failure<Recorrencia>(RecorrenciaErrors.TotalParcelasObrigatorio);
@@ -44,6 +40,6 @@ public sealed class Recorrencia : Entity
             return Result.Failure<Recorrencia>(RecorrenciaErrors.ParcelaAtualInvalida);
 
         return Result.Success(new Recorrencia(
-            Guid.NewGuid(), userId, tipo, intervaloMeses, totalParcelas, parcelaAtual, dataFim));
+            Guid.NewGuid(), userId, tipo, intervaloMeses, totalParcelas, parcelaAtual));
     }
 }
