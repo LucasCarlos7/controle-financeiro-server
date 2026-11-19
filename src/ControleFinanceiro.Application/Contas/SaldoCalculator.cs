@@ -20,7 +20,7 @@ internal static class SaldoCalculator
             return deltas;
 
         var transacoes = await dbContext.Transacoes
-            .Where(t => t.Status == StatusTransacao.Pago
+            .Where(t => (t.Status == StatusTransacao.Pago || t.Status == StatusTransacao.Recebido)
                 && ((t.ContaId != null && contaIds.Contains(t.ContaId.Value))
                     || (t.ContaDestinoId != null && contaIds.Contains(t.ContaDestinoId.Value))))
             .Select(t => new { t.ContaId, t.ContaDestinoId, t.Tipo, t.Valor })

@@ -27,4 +27,10 @@ public static class TransacaoErrors
 
     public static readonly Error NaoEncontrada =
         new("Transacao.NaoEncontrada", "Transação não encontrada.");
+
+    public static readonly Error StatusInvalido =
+        new("Transacao.StatusInvalido", "Operação inválida para o status atual da transação.");
+
+    public static readonly Error NaoPodeCancelarEfetivado =
+        new("Transacao.NaoPodeCancelarEfetivado", "Não é possível cancelar uma transação já efetivada.");
 }

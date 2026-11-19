@@ -124,9 +124,29 @@ public sealed class Transacao : Entity
         return Result.Success();
     }
 
-    public void MarcarComoPaga() => Status = StatusTransacao.Pago;
+    /// <summary>Marca despesa como paga ou receita como recebida, conforme o tipo.</summary>
+    public Result MarcarComoEfetivada()
+    {
+        if (Status.IsExcluido())
+            return Result.Failure(TransacaoErrors.StatusInvalido);
+
+        Status = Tipo == TipoTransacao.Receita
+            ? StatusTransacao.Recebido
+            : StatusTransacao.Pago;
+
+        return Result.Success();
+    }
 
     public void MarcarComoPendente() => Status = StatusTransacao.Pendente;
+
+    public Result Cancelar()
+    {
+        if (Status.IsRealizado())
+            return Result.Failure(TransacaoErrors.NaoPodeCancelarEfetivado);
+
+        Status = StatusTransacao.Cancelado;
+        return Result.Success();
+    }
 
     public void AdicionarTag(Guid tagId)
     {

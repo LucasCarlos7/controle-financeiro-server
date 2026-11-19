@@ -108,13 +108,13 @@ public class TransacaoTests
     }
 
     [Fact]
-    public void MarcarComoPaga_Should_AlterarStatusParaPago()
+    public void MarcarComoEfetivada_Should_AlterarStatusParaPago_When_Despesa()
     {
         var transacao = Transacao.Create(
             UserId, TipoTransacao.Despesa, 100m, DateOnly.FromDateTime(DateTime.Today), "Mercado",
             ContaId, null, null, null, null, StatusTransacao.Pendente, null).Value;
 
-        transacao.MarcarComoPaga();
+        transacao.MarcarComoEfetivada();
 
         transacao.Status.Should().Be(StatusTransacao.Pago);
     }

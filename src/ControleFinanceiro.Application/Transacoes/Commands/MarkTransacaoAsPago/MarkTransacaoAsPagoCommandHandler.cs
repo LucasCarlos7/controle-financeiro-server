@@ -14,7 +14,10 @@ public sealed class MarkTransacaoAsPagoCommandHandler(IApplicationDbContext dbCo
         if (transacao is null || transacao.UserId != request.UserId)
             return Result.Failure(TransacaoErrors.NaoEncontrada);
 
-        transacao.MarcarComoPaga();
+        var efetivadaResult = transacao.MarcarComoEfetivada();
+        if (efetivadaResult.IsFailure)
+            return efetivadaResult;
+
         await dbContext.SaveChangesAsync(cancellationToken);
 
         return Result.Success();

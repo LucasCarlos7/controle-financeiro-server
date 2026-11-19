@@ -24,10 +24,12 @@ public sealed class TransacoesController(ISender sender, ICurrentUserService cur
         [FromQuery] DateOnly? dataInicio,
         [FromQuery] DateOnly? dataFim,
         [FromQuery] Guid? contaId,
+        [FromQuery] Guid? cartaoCreditoId,
         [FromQuery] Guid? categoriaId,
         [FromQuery] Guid? tagId,
         [FromQuery] TipoTransacao? tipo,
         [FromQuery] StatusTransacao? status,
+        [FromQuery] bool? apenasRecorrentes,
         [FromQuery] string? busca,
         CancellationToken cancellationToken)
     {
@@ -37,10 +39,12 @@ public sealed class TransacoesController(ISender sender, ICurrentUserService cur
             DataInicio = dataInicio,
             DataFim = dataFim,
             ContaId = contaId,
+            CartaoCreditoId = cartaoCreditoId,
             CategoriaId = categoriaId,
             TagId = tagId,
             Tipo = tipo,
             Status = status,
+            ApenasRecorrentes = apenasRecorrentes,
             Busca = busca,
         };
 
@@ -163,6 +167,16 @@ public sealed class TransacoesController(ISender sender, ICurrentUserService cur
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> MarkAsPago(Guid id, CancellationToken cancellationToken)
+    {
+        var result = await sender.Send(new MarkTransacaoAsPagoCommand { UserId = currentUser.UserId, Id = id }, cancellationToken);
+        return result.IsSuccess ? NoContent() : HandleFailure(result);
+    }
+
+    // Alias explícito para receitas — internamente chama o mesmo comando
+    [HttpPost("{id:guid}/marcar-recebido")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> MarkAsRecebido(Guid id, CancellationToken cancellationToken)
     {
         var result = await sender.Send(new MarkTransacaoAsPagoCommand { UserId = currentUser.UserId, Id = id }, cancellationToken);
         return result.IsSuccess ? NoContent() : HandleFailure(result);

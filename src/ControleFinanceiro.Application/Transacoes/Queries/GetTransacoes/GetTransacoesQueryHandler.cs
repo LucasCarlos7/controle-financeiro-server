@@ -23,6 +23,9 @@ public sealed class GetTransacoesQueryHandler(IApplicationDbContext dbContext)
         if (request.ContaId is { } contaId)
             query = query.Where(t => t.ContaId == contaId || t.ContaDestinoId == contaId);
 
+        if (request.CartaoCreditoId is { } cartaoCreditoId)
+            query = query.Where(t => t.CartaoCreditoId == cartaoCreditoId);
+
         if (request.CategoriaId is { } categoriaId)
             query = query.Where(t => t.CategoriaId == categoriaId);
 
@@ -31,6 +34,9 @@ public sealed class GetTransacoesQueryHandler(IApplicationDbContext dbContext)
 
         if (request.Status is { } status)
             query = query.Where(t => t.Status == status);
+
+        if (request.ApenasRecorrentes == true)
+            query = query.Where(t => t.RecorrenciaId != null);
 
         if (!string.IsNullOrWhiteSpace(request.Busca))
             query = query.Where(t => t.Descricao.Contains(request.Busca));
