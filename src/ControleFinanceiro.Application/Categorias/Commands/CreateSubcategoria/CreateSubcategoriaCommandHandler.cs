@@ -22,6 +22,10 @@ public sealed class CreateSubcategoriaCommandHandler(IApplicationDbContext dbCon
         if (result.IsFailure)
             return Result.Failure<Guid>(result.Error);
 
+        // EF Core não consegue inferir que entidades com GUID explícito adicionadas a coleções
+        // com field access mode são novas (Added) — gerava UPDATE com 0 linhas ao invés de INSERT.
+        dbContext.Subcategorias.Add(result.Value);
+
         await dbContext.SaveChangesAsync(cancellationToken);
 
         return result.Value.Id;
