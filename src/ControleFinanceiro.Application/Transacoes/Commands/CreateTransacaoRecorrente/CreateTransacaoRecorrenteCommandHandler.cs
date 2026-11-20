@@ -8,7 +8,8 @@ namespace ControleFinanceiro.Application.Transacoes.Commands.CreateTransacaoReco
 public sealed class CreateTransacaoRecorrenteCommandHandler(IApplicationDbContext dbContext)
     : IRequestHandler<CreateTransacaoRecorrenteCommand, Result<Guid>>
 {
-    private const int MaxOcorrenciasIndeterminadas = 24;
+    /// <summary>Total de lançamentos gerados quando o usuário não informa as parcelas.</summary>
+    public const int TotalParcelasPadrao = 100;
 
     public async Task<Result<Guid>> Handle(
         CreateTransacaoRecorrenteCommand request, CancellationToken cancellationToken)
@@ -30,14 +31,16 @@ public sealed class CreateTransacaoRecorrenteCommandHandler(IApplicationDbContex
         if (referenciasValidas.IsFailure)
             return Result.Failure<Guid>(referenciasValidas.Error);
 
+        var totalParcelas = request.TotalParcelas ?? TotalParcelasPadrao;
+
         var recorrenciaResult = Recorrencia.Create(
-            request.UserId, request.TipoRecorrencia, request.IntervaloMeses, request.TotalParcelas, null);
+            request.UserId, request.TipoRecorrencia, request.IntervaloMeses, totalParcelas, null);
 
         if (recorrenciaResult.IsFailure)
             return Result.Failure<Guid>(recorrenciaResult.Error);
 
         var recorrencia = recorrenciaResult.Value;
-        var datas = GerarDatas(request);
+        var datas = GerarDatas(request.DataInicio, request.IntervaloMeses ?? 1, totalParcelas);
 
         var transacoes = new List<Transacao>();
         for (var i = 0; i < datas.Count; i++)
@@ -77,14 +80,12 @@ public sealed class CreateTransacaoRecorrenteCommandHandler(IApplicationDbContex
         return recorrencia.Id;
     }
 
-    private static List<DateOnly> GerarDatas(CreateTransacaoRecorrenteCommand request)
+    private static List<DateOnly> GerarDatas(DateOnly dataInicio, int intervalo, int total)
     {
-        var intervalo = request.IntervaloMeses ?? 1;
-        var total = request.TotalParcelas ?? MaxOcorrenciasIndeterminadas;
         var datas = new List<DateOnly>(total);
 
         for (var i = 0; i < total; i++)
-            datas.Add(request.DataInicio.AddMonths(i * intervalo));
+            datas.Add(dataInicio.AddMonths(i * intervalo));
 
         return datas;
     }

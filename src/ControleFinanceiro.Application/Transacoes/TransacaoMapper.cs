@@ -17,6 +17,7 @@ internal static class TransacaoMapper
         CategoriaId = transacao.CategoriaId,
         SubcategoriaId = transacao.SubcategoriaId,
         Status = transacao.Status,
+        DataPagamento = transacao.DataPagamento,
         RecorrenciaId = transacao.RecorrenciaId,
         TagIds = transacao.TagIds,
     };

@@ -165,9 +165,12 @@ public sealed class TransacoesController(ISender sender, ICurrentUserService cur
     [HttpPost("{id:guid}/marcar-pago")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> MarkAsPago(Guid id, CancellationToken cancellationToken)
+    public async Task<IActionResult> MarkAsPago(
+        Guid id, [FromBody] MarkTransacaoAsPagoRequest? request, CancellationToken cancellationToken)
     {
-        var result = await sender.Send(new MarkTransacaoAsPagoCommand { UserId = currentUser.UserId, Id = id }, cancellationToken);
+        var result = await sender.Send(
+            new MarkTransacaoAsPagoCommand { UserId = currentUser.UserId, Id = id, DataPagamento = request?.DataPagamento },
+            cancellationToken);
         return result.IsSuccess ? NoContent() : HandleFailure(result);
     }
 
@@ -175,9 +178,12 @@ public sealed class TransacoesController(ISender sender, ICurrentUserService cur
     [HttpPost("{id:guid}/marcar-recebido")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> MarkAsRecebido(Guid id, CancellationToken cancellationToken)
+    public async Task<IActionResult> MarkAsRecebido(
+        Guid id, [FromBody] MarkTransacaoAsPagoRequest? request, CancellationToken cancellationToken)
     {
-        var result = await sender.Send(new MarkTransacaoAsPagoCommand { UserId = currentUser.UserId, Id = id }, cancellationToken);
+        var result = await sender.Send(
+            new MarkTransacaoAsPagoCommand { UserId = currentUser.UserId, Id = id, DataPagamento = request?.DataPagamento },
+            cancellationToken);
         return result.IsSuccess ? NoContent() : HandleFailure(result);
     }
 

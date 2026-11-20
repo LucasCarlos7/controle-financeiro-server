@@ -15,6 +15,7 @@ public sealed record TransacaoResponse
     public Guid? CategoriaId { get; init; }
     public Guid? SubcategoriaId { get; init; }
     public required StatusTransacao Status { get; init; }
+    public DateOnly? DataPagamento { get; init; }
     public Guid? RecorrenciaId { get; init; }
     public required IReadOnlyList<Guid> TagIds { get; init; }
 }

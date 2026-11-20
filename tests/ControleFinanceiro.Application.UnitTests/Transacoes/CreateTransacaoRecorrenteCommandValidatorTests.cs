@@ -21,13 +21,13 @@ public class CreateTransacaoRecorrenteCommandValidatorTests
     };
 
     [Fact]
-    public void Should_ReturnError_When_ParceladaSemTotalParcelas()
+    public void Should_NotHaveError_When_ParceladaSemTotalParcelas()
     {
         var command = ValidCommand() with { TipoRecorrencia = TipoRecorrencia.Parcelada, TotalParcelas = null };
 
         var result = _validator.TestValidate(command);
 
-        result.ShouldHaveValidationErrorFor(x => x.TotalParcelas);
+        result.ShouldNotHaveValidationErrorFor(x => x.TotalParcelas);
     }
 
     [Theory]

@@ -387,6 +387,10 @@ namespace ControleFinanceiro.Infrastructure.Persistence.Migrations
                         .HasColumnType("date")
                         .HasColumnName("data");
 
+                    b.Property<DateOnly?>("DataPagamento")
+                        .HasColumnType("date")
+                        .HasColumnName("data_pagamento");
+
                     b.Property<string>("Descricao")
                         .IsRequired()
                         .HasMaxLength(200)

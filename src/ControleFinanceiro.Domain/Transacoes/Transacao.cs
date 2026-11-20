@@ -15,6 +15,7 @@ public sealed class Transacao : Entity
     public Guid? CategoriaId { get; private set; }
     public Guid? SubcategoriaId { get; private set; }
     public StatusTransacao Status { get; private set; }
+    public DateOnly? DataPagamento { get; private set; }
     public Guid? RecorrenciaId { get; private set; }
 
     private readonly List<Guid> _tagIds = [];
@@ -125,7 +126,7 @@ public sealed class Transacao : Entity
     }
 
     /// <summary>Marca despesa como paga ou receita como recebida, conforme o tipo.</summary>
-    public Result MarcarComoEfetivada()
+    public Result MarcarComoEfetivada(DateOnly? dataPagamento = null)
     {
         if (Status.IsExcluido())
             return Result.Failure(TransacaoErrors.StatusInvalido);
@@ -134,10 +135,16 @@ public sealed class Transacao : Entity
             ? StatusTransacao.Recebido
             : StatusTransacao.Pago;
 
+        DataPagamento = dataPagamento ?? Data;
+
         return Result.Success();
     }
 
-    public void MarcarComoPendente() => Status = StatusTransacao.Pendente;
+    public void MarcarComoPendente()
+    {
+        Status = StatusTransacao.Pendente;
+        DataPagamento = null;
+    }
 
     public Result Cancelar()
     {

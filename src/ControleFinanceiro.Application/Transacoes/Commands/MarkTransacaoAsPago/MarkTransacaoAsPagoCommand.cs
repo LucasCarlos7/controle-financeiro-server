@@ -7,4 +7,5 @@ public sealed record MarkTransacaoAsPagoCommand : IRequest<Result>
 {
     public required Guid UserId { get; init; }
     public required Guid Id { get; init; }
+    public DateOnly? DataPagamento { get; init; }
 }

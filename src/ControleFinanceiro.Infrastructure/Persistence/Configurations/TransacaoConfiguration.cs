@@ -50,6 +50,9 @@ internal sealed class TransacaoConfiguration : IEntityTypeConfiguration<Transaca
             .HasMaxLength(20)
             .IsRequired();
 
+        builder.Property(t => t.DataPagamento)
+            .HasColumnName("data_pagamento");
+
         // Lista de tags mapeada como array nativo do PostgreSQL (uuid[]), em vez de tabela
         // de junção, já que o agregado Transacao só precisa dos ids para suas invariantes.
         // O campo privado (List<Guid>) é mapeado diretamente; a propriedade pública somente

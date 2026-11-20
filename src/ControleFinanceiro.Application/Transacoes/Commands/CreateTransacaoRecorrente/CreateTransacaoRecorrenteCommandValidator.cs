@@ -1,4 +1,3 @@
-using ControleFinanceiro.Domain.Transacoes;
 using FluentValidation;
 
 namespace ControleFinanceiro.Application.Transacoes.Commands.CreateTransacaoRecorrente;
@@ -17,13 +16,9 @@ public sealed class CreateTransacaoRecorrenteCommandValidator : AbstractValidato
             .InclusiveBetween(1, 12)
             .When(x => x.IntervaloMeses is not null);
 
-        RuleFor(x => x.TotalParcelas)
-            .NotNull()
-            .InclusiveBetween(1, 120)
-            .When(x => x.TipoRecorrencia == TipoRecorrencia.Parcelada);
-
+        // Opcional: sem valor, o handler gera TotalParcelasPadrao lançamentos.
         RuleFor(x => x.TotalParcelas)
             .InclusiveBetween(1, 120)
-            .When(x => x.TipoRecorrencia != TipoRecorrencia.Parcelada && x.TotalParcelas is not null);
+            .When(x => x.TotalParcelas is not null);
     }
 }
